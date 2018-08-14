@@ -62,141 +62,6 @@ y_hat_test = logreg.predict(X_test)
 df.head()
 ```
 
-    LogisticRegression(C=1000000000000.0, class_weight=None, dual=False,
-              fit_intercept=False, intercept_scaling=1, max_iter=100,
-              multi_class='ovr', n_jobs=1, penalty='l2', random_state=None,
-              solver='liblinear', tol=0.0001, verbose=0, warm_start=False)
-
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>age</th>
-      <th>sex</th>
-      <th>cp</th>
-      <th>trestbps</th>
-      <th>chol</th>
-      <th>fbs</th>
-      <th>restecg</th>
-      <th>thalach</th>
-      <th>exang</th>
-      <th>oldpeak</th>
-      <th>slope</th>
-      <th>ca</th>
-      <th>thal</th>
-      <th>target</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0.708333</td>
-      <td>1.0</td>
-      <td>1.000000</td>
-      <td>0.481132</td>
-      <td>0.244292</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>0.603053</td>
-      <td>0.0</td>
-      <td>0.370968</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.333333</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>0.166667</td>
-      <td>1.0</td>
-      <td>0.666667</td>
-      <td>0.339623</td>
-      <td>0.283105</td>
-      <td>0.0</td>
-      <td>0.5</td>
-      <td>0.885496</td>
-      <td>0.0</td>
-      <td>0.564516</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.666667</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>0.250000</td>
-      <td>0.0</td>
-      <td>0.333333</td>
-      <td>0.339623</td>
-      <td>0.178082</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.770992</td>
-      <td>0.0</td>
-      <td>0.225806</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>0.666667</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>0.562500</td>
-      <td>1.0</td>
-      <td>0.333333</td>
-      <td>0.245283</td>
-      <td>0.251142</td>
-      <td>0.0</td>
-      <td>0.5</td>
-      <td>0.816794</td>
-      <td>0.0</td>
-      <td>0.129032</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>0.666667</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>0.583333</td>
-      <td>0.0</td>
-      <td>0.000000</td>
-      <td>0.245283</td>
-      <td>0.520548</td>
-      <td>0.0</td>
-      <td>0.5</td>
-      <td>0.702290</td>
-      <td>1.0</td>
-      <td>0.096774</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>0.666667</td>
-      <td>1.0</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
 ## Drawing the ROC Curve
   
 In practice, a good way to implement AUC and ROC is via sklearn's  built in methods:
@@ -210,6 +75,10 @@ from sklearn.metrics import roc_curve, auc
 ```python
 #scikit learns built in roc_curve method returns the fpr, tpr and thresholds
 #for various decision boundaries given the case member probabilites
+
+#First calculate the probability scores of each of the datapoints:
+y_score = logreg.fit(X_train, y_train).decision_function(X_test)
+
 fpr, tpr, thresholds = roc_curve(y_test, y_score)
 ```
 
@@ -219,9 +88,6 @@ From there we can easily calculate the AUC:
 ```python
 print('AUC: {}'.format(auc(fpr, tpr)))
 ```
-
-    AUC: 0.8738548273431994
-
 
 ### Putting it all together as a cohesive visual:
 
@@ -250,13 +116,6 @@ plt.title('Receiver operating characteristic (ROC) Curve')
 plt.legend(loc="lower right")
 plt.show()
 ```
-
-    AUC: 0.8738548273431994
-
-
-
-![png](index_files/index_11_1.png)
-
 
 ## Interpretation
 Think about the scenario we've been describing thus far; predicting heart disease. If you tune the current model to have and 80% True Positive Rate, (you've still missed 20% of those with heart disease), what is the False positive rate?
