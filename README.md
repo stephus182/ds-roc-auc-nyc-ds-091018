@@ -210,6 +210,8 @@ from sklearn.metrics import roc_curve, auc
 ```python
 #scikit learns built in roc_curve method returns the fpr, tpr and thresholds
 #for various decision boundaries given the case member probabilites
+y_score = logreg.fit(X_train, y_train).decision_function(X_test)
+
 fpr, tpr, thresholds = roc_curve(y_test, y_score)
 ```
 
